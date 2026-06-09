@@ -1,13 +1,19 @@
 import Header from './components/Header'
+import Marquee from './components/Marquee'
 import Dashboard from './components/Dashboard'
+import Footer from './components/Footer'
 
 function App() {
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
+    <div className="min-h-screen flex flex-col bg-zinc-50 bg-grain font-sans selection:bg-zinc-900 selection:text-white">
       <Header />
-      <main className="pb-12">
+      <Marquee /> {/* A Fita entra aqui! */}
+      
+      <main className="flex-grow pb-24">
         <Dashboard />
       </main>
+
+      <Footer />
     </div>
   )
 }

@@ -1,33 +1,58 @@
-// Coordenadas das nossas praias principais
-const COORDENADAS = {
-  'Nazaré': { lat: 39.6011, lon: -9.083 },
-  'Peniche': { lat: 39.3558, lon: -9.3811 },
-  'Ericeira': { lat: 38.961, lon: -9.4191 },
-  'Carcavelos': { lat: 38.6796, lon: -9.3366 }
+// O nosso novo mapa organizado por Distritos
+export const COORDENADAS_AGRUPADAS = {
+  'Distrito de Leiria': {
+    'Praia da Vieira': { lat: 39.875, lon: -8.966 },
+    'Praia do Pedrógão': { lat: 39.923, lon: -8.948 },
+    'São Pedro de Moel': { lat: 39.757, lon: -9.030 },
+    'Paredes da Vitória': { lat: 39.700, lon: -9.053 },
+    'Nazaré': { lat: 39.6011, lon: -9.083 },
+    'Peniche': { lat: 39.3558, lon: -9.3811 }
+  },
+  'Distrito de Lisboa': {
+    'Ericeira': { lat: 38.961, lon: -9.4191 },
+    'Carcavelos': { lat: 38.6796, lon: -9.3366 },
+    'Guincho': { lat: 38.731, lon: -9.474 }
+  },
+  'Distrito do Porto': {
+    'Matosinhos': { lat: 41.178, lon: -8.694 },
+    'Leça da Palmeira': { lat: 41.192, lon: -8.708 }
+  },
+  'Distrito de Faro': {
+    'Faro': { lat: 37.0194, lon: -7.9322 },
+    'Sagres': { lat: 37.007, lon: -8.939 }
+  }
 };
 
-export async function obterCondicoes(praia) {
-  const { lat, lon } = COORDENADAS[praia];
+export async function obterCondicoes(praiaSelecionada) {
+  // Procurar a praia dentro dos distritos
+  let coords = null;
+  for (const distrito in COORDENADAS_AGRUPADAS) {
+    if (COORDENADAS_AGRUPADAS[distrito][praiaSelecionada]) {
+      coords = COORDENADAS_AGRUPADAS[distrito][praiaSelecionada];
+      break;
+    }
+  }
+
+  if (!coords) return null; // Se não encontrar a praia, cancela
+  const { lat, lon } = coords;
 
   try {
-    // 1. Ir buscar as condições do mar (Onda e Período)
     const urlMar = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}&current=wave_height,wave_period`;
     const resMar = await fetch(urlMar);
     const dadosMar = await resMar.json();
 
-    // 2. Ir buscar as condições do vento (Velocidade)
-    const urlVento = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=wind_speed_10m`;
+    const urlVento = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=wind_speed_10m,wind_direction_10m`;
     const resVento = await fetch(urlVento);
     const dadosVento = await resVento.json();
 
-    // 3. Juntar e devolver tudo limpinho
     return {
       onda: dadosMar.current.wave_height,
       periodo: dadosMar.current.wave_period,
-      vento: dadosVento.current.wind_speed_10m
+      vento: dadosVento.current.wind_speed_10m,
+      direcaoVento: dadosVento.current.wind_direction_10m
     };
   } catch (erro) {
-    console.error("Erro ao buscar dados das ondas:", erro);
+    console.error("Erro ao buscar dados:", erro);
     return null;
   }
 }
