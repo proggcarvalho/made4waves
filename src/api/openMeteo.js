@@ -1,4 +1,3 @@
-// O nosso novo mapa organizado por Distritos
 export const COORDENADAS_AGRUPADAS = {
   'Distrito de Leiria': {
     'Praia da Vieira': { lat: 39.875, lon: -8.966 },
@@ -24,7 +23,6 @@ export const COORDENADAS_AGRUPADAS = {
 };
 
 export async function obterCondicoes(praiaSelecionada) {
-  // Procurar a praia dentro dos distritos
   let coords = null;
   for (const distrito in COORDENADAS_AGRUPADAS) {
     if (COORDENADAS_AGRUPADAS[distrito][praiaSelecionada]) {
@@ -33,11 +31,12 @@ export async function obterCondicoes(praiaSelecionada) {
     }
   }
 
-  if (!coords) return null; // Se não encontrar a praia, cancela
+  if (!coords) return null;
   const { lat, lon } = coords;
 
   try {
-    const urlMar = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}&current=wave_height,wave_period`;
+    // Adicionado o parâmetro 'sea_surface_temperature' no final do urlMar
+    const urlMar = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}&current=wave_height,wave_period,sea_surface_temperature`;
     const resMar = await fetch(urlMar);
     const dadosMar = await resMar.json();
 
@@ -49,7 +48,8 @@ export async function obterCondicoes(praiaSelecionada) {
       onda: dadosMar.current.wave_height,
       periodo: dadosMar.current.wave_period,
       vento: dadosVento.current.wind_speed_10m,
-      direcaoVento: dadosVento.current.wind_direction_10m
+      direcaoVento: dadosVento.current.wind_direction_10m,
+      tempAgua: dadosMar.current.sea_surface_temperature // Capturamos a temperatura da água aqui
     };
   } catch (erro) {
     console.error("Erro ao buscar dados:", erro);
