@@ -1,21 +1,40 @@
-import Header from './components/Header'
-import Marquee from './components/Marquee'
-import Dashboard from './components/Dashboard'
-import Footer from './components/Footer'
+import { useState, useEffect } from 'react';
+import Header from './components/Header';
+import Marquee from './components/Marquee';
+import Dashboard from './components/Dashboard';
+import Spots from './components/Spots';
+import Disclaimer from './components/Disclaimer';
+import Contact from './components/Contact'; // <-- Importámos o Contact
+import Footer from './components/Footer';
 
-function App() {
+export default function App() {
+  const [hash, setHash] = useState(window.location.hash);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setHash(window.location.hash);
+      window.scrollTo(0, 0); 
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Adicionámos a linha do #contact aqui
+  const renderContent = () => {
+    if (hash === '#spots') return <Spots />;
+    if (hash === '#disclaimer') return <Disclaimer />;
+    if (hash === '#contact') return <Contact />; 
+    return <Dashboard />;
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-zinc-50 bg-grain font-sans selection:bg-zinc-900 selection:text-white">
+    <div className="font-sans text-zinc-900 bg-zinc-50 min-h-screen">
       <Header />
-      <Marquee /> {/* A Fita entra aqui! */}
+      <Marquee />
       
-      <main className="flex-grow pb-24">
-        <Dashboard />
-      </main>
-
+      {renderContent()}
+      
       <Footer />
     </div>
   )
 }
-
-export default App

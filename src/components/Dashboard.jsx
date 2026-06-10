@@ -40,7 +40,6 @@ export default function Dashboard() {
   const powerPercentage = Math.min((rawPower / 150) * 100, 100);
   const powerColor = rawPower > 80 ? 'bg-red-500' : 'bg-lime-400';
 
-  // Cálculo estimativo da onda na praia (65% do Swell)
   const ondaPraiaMin = condicoes ? (condicoes.onda * 0.55).toFixed(1) : '0.0';
   const ondaPraiaMax = condicoes ? (condicoes.onda * 0.70).toFixed(1) : '0.0';
 
@@ -68,13 +67,28 @@ export default function Dashboard() {
             className="bg-white border-4 border-zinc-900 text-zinc-900 font-black uppercase text-xl px-6 py-2.5 focus:outline-none focus:border-lime-400 hover:bg-zinc-900 hover:text-white cursor-pointer transition-all appearance-none shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] focus:shadow-[4px_4px_0px_0px_#a3e635]"
             style={{ backgroundImage: 'none' }}
           >
-            {Object.entries(COORDENADAS_AGRUPADAS).map(([distrito, praias]) => (
-              <optgroup key={distrito} label={distrito} className="bg-zinc-900 text-zinc-400 font-bold uppercase tracking-widest p-2">
-                {Object.keys(praias).map((spot) => (
-                  <option key={spot} value={spot} className="text-zinc-50 bg-zinc-900">{spot}</option>
-                ))}
-              </optgroup>
-            ))}
+            {/* Traduções simples dos distritos */}
+            <optgroup label="Leiria District" className="bg-zinc-900 text-zinc-400 font-bold uppercase tracking-widest p-2">
+              <option value="Praia da Vieira" className="text-zinc-50 bg-zinc-900">Praia da Vieira</option>
+              <option value="Praia do Pedrógão" className="text-zinc-50 bg-zinc-900">Praia do Pedrógão</option>
+              <option value="São Pedro de Moel" className="text-zinc-50 bg-zinc-900">São Pedro de Moel</option>
+              <option value="Paredes da Vitória" className="text-zinc-50 bg-zinc-900">Paredes da Vitória</option>
+              <option value="Nazaré" className="text-zinc-50 bg-zinc-900">Nazaré</option>
+              <option value="Peniche" className="text-zinc-50 bg-zinc-900">Peniche</option>
+            </optgroup>
+            <optgroup label="Lisboa District" className="bg-zinc-900 text-zinc-400 font-bold uppercase tracking-widest p-2">
+              <option value="Ericeira" className="text-zinc-50 bg-zinc-900">Ericeira</option>
+              <option value="Carcavelos" className="text-zinc-50 bg-zinc-900">Carcavelos</option>
+              <option value="Guincho" className="text-zinc-50 bg-zinc-900">Guincho</option>
+            </optgroup>
+            <optgroup label="Porto District" className="bg-zinc-900 text-zinc-400 font-bold uppercase tracking-widest p-2">
+              <option value="Matosinhos" className="text-zinc-50 bg-zinc-900">Matosinhos</option>
+              <option value="Leça da Palmeira" className="text-zinc-50 bg-zinc-900">Leça da Palmeira</option>
+            </optgroup>
+            <optgroup label="Faro District" className="bg-zinc-900 text-zinc-400 font-bold uppercase tracking-widest p-2">
+              <option value="Faro" className="text-zinc-50 bg-zinc-900">Faro</option>
+              <option value="Sagres" className="text-zinc-50 bg-zinc-900">Sagres</option>
+            </optgroup>
           </select>
         </div>
 
@@ -82,7 +96,6 @@ export default function Dashboard() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             
-            {/* CARTÃO ATUALIZADO: De Onda para SWELL */}
             <div className="bg-white border-4 border-zinc-900 p-8 shadow-[8px_8px_0px_0px_rgba(24,24,27,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[10px_10px_0px_0px_rgba(24,24,27,1)] transition-all flex flex-col justify-between">
               <div>
                 <div className="flex justify-between items-start mb-8">
@@ -97,18 +110,16 @@ export default function Dashboard() {
                 </div>
               </div>
               
-              {/* O tamanho estimado na praia em pequeno */}
               <div className="mt-6 pt-4 border-t border-dashed border-zinc-300">
                 <p className="text-[10px] font-black uppercase text-zinc-400 tracking-wider">
-                  Est. na Praia: <span className="text-zinc-900 text-xs font-mono">{aCarregar ? '0.0-0.0' : `${ondaPraiaMin}-${ondaPraiaMax}`}m</span>
+                  Est. Beach: <span className="text-zinc-900 text-xs font-mono">{aCarregar ? '0.0-0.0' : `${ondaPraiaMin}-${ondaPraiaMax}`}m</span>
                 </p>
               </div>
             </div>
             
-            {/* Cartão Período */}
             <div className="bg-white border-4 border-zinc-900 p-8 shadow-[8px_8px_0px_0px_rgba(24,24,27,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[10px_10px_0px_0px_rgba(24,24,27,1)] transition-all">
               <div className="flex justify-between items-start mb-12">
-                <span className="text-zinc-900 text-sm uppercase font-black tracking-widest">Período</span>
+                <span className="text-zinc-900 text-sm uppercase font-black tracking-widest">Period</span>
                 <Timer size={32} className={`text-zinc-900 ${aCarregar ? 'opacity-50' : ''}`} strokeWidth={2} />
               </div>
               <div className="flex items-baseline gap-1">
@@ -119,10 +130,9 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Cartão Água */}
             <div className="bg-white border-4 border-zinc-900 p-8 shadow-[8px_8px_0px_0px_rgba(24,24,27,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[10px_10px_0px_0px_rgba(24,24,27,1)] transition-all">
               <div className="flex justify-between items-start mb-12">
-                <span className="text-zinc-900 text-sm uppercase font-black tracking-widest">Água</span>
+                <span className="text-zinc-900 text-sm uppercase font-black tracking-widest">Water</span>
                 <Thermometer size={32} className={`text-zinc-900 ${aCarregar ? 'opacity-50' : ''}`} strokeWidth={2} />
               </div>
               <div className="flex items-baseline gap-1">
@@ -133,10 +143,9 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Cartão Vento */}
             <div className="bg-zinc-900 border-4 border-zinc-900 p-8 shadow-[8px_8px_0px_0px_rgba(161,161,170,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[10px_10px_0px_0px_rgba(161,161,170,1)] transition-all">
               <div className="flex justify-between items-start mb-12">
-                <span className="text-zinc-50 text-sm uppercase font-black tracking-widest">Vento</span>
+                <span className="text-zinc-50 text-sm uppercase font-black tracking-widest">Wind</span>
                 <Wind size={32} className={`text-zinc-50 ${aCarregar ? 'opacity-50' : ''}`} strokeWidth={2} />
               </div>
               <div className="flex items-baseline justify-between">
@@ -160,7 +169,6 @@ export default function Dashboard() {
 
           </div>
 
-          {/* Barra de Energia */}
           <div className="w-full bg-white border-4 border-zinc-900 p-6 shadow-[8px_8px_0px_0px_rgba(24,24,27,1)] flex flex-col gap-4 mt-2">
             <div className="flex justify-between items-end">
               <div className="flex items-center gap-2">

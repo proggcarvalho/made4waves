@@ -1,28 +1,21 @@
 export default function Marquee() {
-  // O texto que vai aparecer na fita
-  const texto = "RAW SURF DATA // LIVE CONDITIONS // NO BULLSHIT // ";
-  
-  // Repetimos o texto algumas vezes para garantir que preenche até os monitores mais largos
-  const repeticoes = Array(8).fill(texto);
+  const frase = "RAW SURF DATA // LIVE CONDITIONS // NO BULLSHIT // ";
+  // Repetimos a frase várias vezes para encher o ecrã com margem de segurança
+  const textoLongo = frase.repeat(10); 
 
   return (
-    <div className="w-full bg-zinc-900 text-zinc-50 py-2.5 border-b-4 border-zinc-200 flex overflow-hidden relative">
-      {/* Primeira fita */}
-      <div className="animate-marquee flex whitespace-nowrap">
-        {repeticoes.map((frase, i) => (
-          <span key={i} className="font-black tracking-widest uppercase text-xs pr-4">
-            {frase}
-          </span>
-        ))}
+    <div className="w-full bg-zinc-900 border-y-2 border-zinc-950 py-1.5 overflow-hidden flex whitespace-nowrap relative select-none">
+      {/* Bloco 1 */}
+      <div className="animate-[marquee_30s_linear_infinite] inline-block shrink-0">
+        <span className="text-zinc-200 text-[10px] font-black tracking-[0.2em] uppercase pr-2">
+          {textoLongo}
+        </span>
       </div>
-      
-      {/* Segunda fita (cópia exata para fazer o loop sem quebras) */}
-      <div className="animate-marquee flex whitespace-nowrap absolute top-2.5 left-full">
-        {repeticoes.map((frase, i) => (
-          <span key={`clone-${i}`} className="font-black tracking-widest uppercase text-xs pr-4">
-            {frase}
-          </span>
-        ))}
+      {/* Bloco 2 (cópia exata para o loop não quebrar) */}
+      <div className="animate-[marquee_30s_linear_infinite] inline-block shrink-0" aria-hidden="true">
+        <span className="text-zinc-200 text-[10px] font-black tracking-[0.2em] uppercase pr-2">
+          {textoLongo}
+        </span>
       </div>
     </div>
   )
